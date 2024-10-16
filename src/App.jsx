@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from './redux/userSlice';
@@ -12,14 +12,30 @@ import Jobs from './components/Jobs';
 const App = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
+  const [userName, setUserName] = useState('');
 
-  useEffect(() => {
-    const userName = window.prompt('Enter user name');
+  const handleLogin = (e) => {
+    e.preventDefault();
     dispatch(loginUser({ name: userName }));
-  }, [dispatch]);
+  };
 
   if (!currentUser) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <form onSubmit={handleLogin}>
+          <label>
+            Enter user name:
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+            />
+          </label>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    );
   }
 
   return (
