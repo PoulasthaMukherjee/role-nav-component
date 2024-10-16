@@ -13,10 +13,17 @@ const App = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
   const [userName, setUserName] = useState('');
+  const [error, setError] = useState(null);
 
   const handleLogin = (e) => {
     e.preventDefault();
     dispatch(loginUser({ name: userName }));
+    const user = currentUser;
+    if (!user) {
+      setError('User not found. Please try again.');
+    } else {
+      setError(null);
+    }
   };
 
   if (!currentUser) {
@@ -28,12 +35,16 @@ const App = () => {
             <input
               type="text"
               value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={(e) => {
+                setUserName(e.target.value);
+                setError(null);
+              }}
               required
             />
           </label>
           <button type="submit">Login</button>
         </form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     );
   }
