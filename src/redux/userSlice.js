@@ -16,20 +16,11 @@ const userSlice = createSlice({
   reducers: {
     loginUser: (state, action) => {
       const { name } = action.payload;
-      
-      const findUser = (inputName) => {
-        const user = state.users.find(user => user.name === inputName);
-        if (user) {
-          return user;
-        } else {
-          const newInput = window.prompt('User not found. Enter valid user name:');
-          return findUser(newInput);
-        }
-      };
-
-      const user = findUser(name);
+      const user = state.users.find(user => user.name === name);
       if (user) {
         state.currentUser = user;
+      } else {
+        state.currentUser = null;
       }
     },
     logoutUser: (state) => {
