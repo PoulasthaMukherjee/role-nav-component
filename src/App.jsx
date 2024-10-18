@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from './redux/userSlice';
@@ -18,13 +18,18 @@ const App = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     dispatch(loginUser({ name: userName }));
-    const user = currentUser;
-    if (!user) {
+    if (!currentUser) {
       setError('User not found. Please try again.');
     } else {
       setError(null);
     }
   };
+
+  useEffect(() => {
+    if (!currentUser) {
+      setError(null);
+    }
+  }, [currentUser]);
 
   if (!currentUser) {
     return (
@@ -52,13 +57,13 @@ const App = () => {
   return (
     <Router>
       <CustomErrorBoundary>
-        <Navbar userRole={currentUser.role} />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
             path="/projects"
             element={
-              <Protected userRole={currentUser.role}>
+              <Protected>
                 <Projects />
               </Protected>
             }
@@ -66,7 +71,7 @@ const App = () => {
           <Route
             path="/jobs"
             element={
-              <Protected userRole={currentUser.role}>
+              <Protected>
                 <Jobs />
               </Protected>
             }
