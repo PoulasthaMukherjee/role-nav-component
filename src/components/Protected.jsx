@@ -1,9 +1,16 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const Protected = ({ userRole, children }) => {
+const Protected = ({ children }) => {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const location = useLocation();
-  if (userRole === 'analyst' && location.pathname.startsWith('/projects')) {
+
+  if (!currentUser) {
+    return <Navigate to="/" />;
+  }
+
+  if (currentUser.role === 'analyst' && location.pathname.startsWith('/projects')) {
     return <Navigate to="/" />;
   }
 
